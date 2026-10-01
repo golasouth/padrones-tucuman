@@ -1,0 +1,16 @@
+VALIDACION VERSION 1 - PADRONES TUCUMAN -> BAS
+
+Caso de prueba: Octubre 2026
+RG116: 51,694 registros
+ACREDITAN: 90,495 registros
+Union final: 125,176 CUIT
+
+Alicuotas
+- Comparadas contra el TXT final corregido: 125,176
+- Diferencias: 0
+
+Coeficientes
+- Comparados contra columna K de Padron924 2026-10(3): 125,176
+- Diferencias: 0
+
+Resultado: OK - coincidencia total

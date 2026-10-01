@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Padrones Tucumán → BAS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">CSDD · Herramienta interna</p>
+        <h1>Padrones Tucumán → BAS</h1>
+        <p class="lede">Cargá los dos archivos de Rentas. El procesamiento se hace dentro de tu navegador y genera los dos TXT listos para importar en BAS.</p>
+      </div>
+      <div class="privacy">🔒 Los archivos no se suben a un servidor.</div>
+    </header>
+
+    <section class="card">
+      <h2>1. Cargar padrones</h2>
+      <p class="muted">Podés cargar los ZIP tal como los descargás de Rentas, o los TXT ya descomprimidos.</p>
+      <div class="upload-grid">
+        <label class="dropzone" id="rgZone">
+          <span class="drop-title">Coeficientes RG 116/10</span>
+          <span class="drop-sub">ZIP o TXT</span>
+          <input id="rgInput" type="file" accept=".zip,.txt,text/plain,application/zip" />
+          <span id="rgFile" class="file-name">Ningún archivo seleccionado</span>
+        </label>
+        <label class="dropzone" id="acZone">
+          <span class="drop-title">ACREDITAN · RG 176/10</span>
+          <span class="drop-sub">ZIP o TXT</span>
+          <input id="acInput" type="file" accept=".zip,.txt,text/plain,application/zip" />
+          <span id="acFile" class="file-name">Ningún archivo seleccionado</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2. Datos del padrón</h2>
+      <div class="meta-grid">
+        <label>Período
+          <input id="periodo" type="text" placeholder="AAAA-MM" readonly />
+        </label>
+        <label>Fecha de publicación
+          <input id="publicacion" type="text" placeholder="DD/MM/AAAA" />
+        </label>
+        <label>Vigencia desde
+          <input id="desde" type="text" placeholder="DD/MM/AAAA" readonly />
+        </label>
+        <label>Vigencia hasta
+          <input id="hasta" type="text" placeholder="DD/MM/AAAA" readonly />
+        </label>
+      </div>
+      <p class="hint">La fecha de publicación se intenta detectar del nombre del ZIP, por ejemplo <code>..._280920261654.zip → 28/09/2026</code>. Podés corregirla manualmente antes de generar.</p>
+    </section>
+
+    <section class="card">
+      <div class="actions-row">
+        <div>
+          <h2>3. Verificar</h2>
+          <p class="muted">Se cruzan ambos padrones, se validan formatos y se aplican las reglas acordadas para coeficiente y alícuota.</p>
+        </div>
+        <button id="verifyBtn" class="primary">Verificar padrones</button>
+      </div>
+
+      <div id="status" class="status idle">Esperando archivos.</div>
+
+      <div id="stats" class="stats hidden">
+        <div><strong id="statRg">0</strong><span>RG116</span></div>
+        <div><strong id="statAc">0</strong><span>ACREDITAN</span></div>
+        <div><strong id="statUnion">0</strong><span>CUIT finales</span></div>
+        <div><strong id="statExentos">0</strong><span>Exentos</span></div>
+        <div><strong id="statCoefCero">0</strong><span>RG116 coef. 0</span></div>
+        <div><strong id="statCmSinRg">0</strong><span>CM sin RG116</span></div>
+      </div>
+
+      <div id="issuesBox" class="issues hidden"></div>
+    </section>
+
+    <section id="downloadCard" class="card hidden">
+      <h2>4. Descargar archivos para BAS</h2>
+      <div class="download-grid">
+        <button id="downloadAli" class="download-btn">
+          <span>⬇</span>
+          <div><strong>Alícuotas</strong><small>TXT separado por punto y coma</small></div>
+        </button>
+        <button id="downloadCoef" class="download-btn">
+          <span>⬇</span>
+          <div><strong>Coeficientes CM</strong><small>TXT de ancho fijo con espacios</small></div>
+        </button>
+      </div>
+      <details>
+        <summary>Ver muestra de salida</summary>
+        <div class="preview-grid">
+          <div><h3>Alícuotas</h3><pre id="previewAli"></pre></div>
+          <div><h3>Coeficientes</h3><pre id="previewCoef"></pre></div>
+        </div>
+      </details>
+    </section>
+
+    <footer>
+      <p>Generador de padrones Tucumán para BAS · Compañía Sudamericana de Diseño y Distribución S.A.</p>
+    </footer>
+  </main>
+</body>
+</html>
