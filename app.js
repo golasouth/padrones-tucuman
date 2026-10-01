@@ -83,12 +83,29 @@
       const cuit = t[0];
       try {
         const exempt = t[1] === "E";
-        const status = exempt ? t[2] : t[1];
-        const from = exempt ? t[3] : t[2];
-        const to = exempt ? t[4] : t[3];
+        let status, from, to;
+        if (exempt) {
+          // En ACREDITAN los exentos pueden venir como:
+          // CUIT E CM DESDE HASTA ... -----
+          // CUIT E CL DESDE HASTA ... -----
+          // o CUIT E DESDE HASTA ... ----- (sin condición CL/CM).
+          if (/^(CM|CL)$/.test(t[2])) {
+            status = t[2];
+            from = t[3];
+            to = t[4];
+          } else {
+            status = null;
+            from = t[2];
+            to = t[3];
+          }
+        } else {
+          status = t[1];
+          from = t[2];
+          to = t[3];
+        }
         const pctToken = t[t.length - 1];
         const pct = pctToken === "-----" ? null : Number(pctToken);
-        if (!/^(CM|CL)$/.test(status)) throw new Error(`condición ${status} inválida`);
+        if (!exempt && !/^(CM|CL)$/.test(status)) throw new Error(`condición ${status} inválida`);
         if (!/^\d{8}$/.test(from) || !/^\d{8}$/.test(to)) throw new Error("fecha DESDE/HASTA inválida");
         if (!exempt && !Number.isFinite(pct)) throw new Error("alícuota inválida");
         const period = from.slice(0, 6);
